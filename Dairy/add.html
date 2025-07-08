@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Entry</title>
+
+  <!-- Passcode Protection -->
+  <script>
+    if (localStorage.getItem("diary_passcode") !== "ourstory2025") {
+      window.location.href = "login.html";
+    }
+  </script>
+
+  <!-- Styles and Supabase CDN -->
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+  <h1>✍️ Add a New Entry</h1>
+
+  <form id="entryForm">
+    <input type="text" id="title" placeholder="Title" required><br>
+    <textarea id="content" placeholder="Write your thoughts..." rows="6" required></textarea><br>
+    <input type="file" id="image"><br><br>
+    <button type="submit">Save Entry</button>
+  </form>
+
+  <div id="status"></div>
+
+  <div class="nav-links">
+    <a href="index.html">← Back to Diary</a>
+  </div>
+
+  <!-- Scripts (order matters) -->
+  <script src="supabase.js"></script>
+  <script src="upload.js"></script>
+</body>
+</html>

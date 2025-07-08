@@ -1,0 +1,179 @@
+body {
+  font-family: 'Patrick Hand', cursive;
+  background: #fff8e1;
+  padding: 20px;
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2.5em;
+  color: #b5651d;
+}
+
+.entry-card {
+  background: #fff;
+  border-left: 5px solid #ffab00;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 10px;
+}
+
+.entry-card img {
+  max-width: 50%;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+  padding: 10px;
+}
+
+.grid img {
+  width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.login-container {
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.login-container input {
+  padding: 10px;
+  width: 80%;
+  margin: 10px 0;
+  font-size: 1em;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.login-container button {
+  padding: 10px 20px;
+  font-size: 1em;
+  border: none;
+  background: #ffab00;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.nav-links {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.nav-links a {
+  margin: 0 10px;
+  text-decoration: none;
+  color: #b5651d;
+  font-weight: bold;
+}
+
+.emoji-bounce {
+  display: inline-block;
+  animation: bounce 1.5s infinite;
+}
+
+.emoji-heartbeat {
+  display: inline-block;
+  animation: heartbeat 2s infinite;
+}
+
+.emoji-spin {
+  display: inline-block;
+  animation: spin 3s linear infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.2); }
+  50% { transform: scale(1); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+/* --- Entry Form Styling --- */
+form#entryForm {
+  background: #fff;
+  padding: 25px;
+  border-radius: 16px;
+  max-width: 600px;
+  margin: 30px auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+form#entryForm input[type="text"],
+form#entryForm textarea,
+form#entryForm input[type="file"] {
+  width: 100%;
+  font-family: 'Patrick Hand', cursive;
+  padding: 12px;
+  font-size: 1.1em;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  background: #fdfdfd;
+  box-sizing: border-box;
+}
+
+form#entryForm input:focus,
+form#entryForm textarea:focus {
+  outline: none;
+  border-color: #ffab00;
+  box-shadow: 0 0 5px #ffab00;
+}
+
+/* --- Submit Button --- */
+form#entryForm button {
+  background: #ffab00;
+  border: none;
+  padding: 12px 25px;
+  font-size: 1.1em;
+  color: white;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+form#entryForm button:hover {
+  background: #e69500;
+}
+
+/* --- Status Message --- */
+#status {
+  text-align: center;
+  margin-top: 20px;
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+/* --- Navigation Link --- */
+.nav-links {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.nav-links a {
+  text-decoration: none;
+  font-weight: bold;
+  color: #b5651d;
+}

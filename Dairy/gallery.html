@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    if (localStorage.getItem("diary_passcode") !== "ourstory2025") {
+      window.location.href = "login.html";
+    }
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photo Gallery</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <style>
+    body {
+      font-family: 'Patrick Hand', cursive;
+      background: #fff8e1;
+      padding: 20px;
+      color: #333;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.2em;
+      color: #b5651d;
+    }
+
+    #uploadForm {
+      margin: 20px auto;
+    }
+
+    #uploadForm input[type="file"] {
+      padding: 8px;
+      font-family: inherit;
+      font-size: 1em;
+    }
+
+    #uploadForm button {
+      padding: 10px 20px;
+      background-color: #ffab00;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    #uploadForm button:hover {
+      background-color: #e69500;
+    }
+
+    #uploadStatus {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 15px;
+      padding: 20px;
+    }
+
+    .grid img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+    }
+
+    .grid img:hover {
+      transform: scale(1.03);
+    }
+
+    .nav-links {
+      margin-top: 30px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-weight: bold;
+      color: #b5651d;
+      margin: 0 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🖼️ Our Moments</h1>
+
+  <!-- Upload Form -->
+  <form id="uploadForm">
+    <input type="file" id="photoInput" accept="image/*" required>
+    <button type="submit">Upload Photo</button>
+  </form>
+  <p id="uploadStatus"></p>
+
+  <!-- Gallery -->
+  <div id="gallery" class="grid"></div>
+
+  <div class="nav-links"><a href="index.html">← Back to Diary</a></div>
+
+  <script src="supabase.js"></script>
+  <script>
+    const gallery = document.getElementById("gallery");
+    const uploadForm = document.getElementById("uploadForm");
+    const photoInput = document.getElementById("photoInput");
+    const uploadStatus = document.getElementById("uploadStatus");
+
+    const BUCKET = "gallery"; // your Supabase bucket name
+
+    async function loadGallery() {
+      const { data, error } = await supabase.storage.from(BUCKET).list('', {
+        limit: 100,
+        sortBy: { column: 'created_at', order: 'desc' }
+      });
+
+      if (error) {
+        gallery.innerHTML = "<p>❌ Failed to load images.</p>";
+        return;
+      }
+
+      gallery.innerHTML = "";
+
+      for (const item of data) {
+        const { data: urlData } = await supabase.storage.from(BUCKET).getPublicUrl(item.name);
+        const img = document.createElement("img");
+        img.src = urlData.publicUrl;
+        img.alt = item.name;
+        gallery.appendChild(img);
+      }
+    }
+
+    uploadForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const file = photoInput.files[0];
+      if (!file) return;
+
+      const filePath = `${Date.now()}_${file.name}`;
+      const { error } = await supabase.storage.from(BUCKET).upload(filePath, file);
+
+      if (error) {
+        uploadStatus.textContent = "❌ Upload failed.";
+        uploadStatus.style.color = "red";
+        return;
+      }
+
+      uploadStatus.textContent = "✅ Uploaded successfully!";
+      uploadStatus.style.color = "green";
+      photoInput.value = "";
+      loadGallery();
+    });
+
+    loadGallery();
+  </script>
+</body>
+</html>

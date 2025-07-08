@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Our Story</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="login-container">
+    <h2>🔐 Enter Passcode</h2>
+    <input type="password" id="passcode" placeholder="Secret passcode..." />
+    <button onclick="checkPass()">Unlock</button>
+    <p id="error" style="color:red;"></p>
+  </div>
+
+  <script>
+    function checkPass() {
+      const code = document.getElementById('passcode').value;
+      if (code === "ourstory2025") {
+        localStorage.setItem("diary_passcode", code);
+        window.location.href = "index.html";
+      } else {
+        document.getElementById('error').innerText = "Wrong code 💔";
+      }
+    }
+  </script>
+</body>
+</html>

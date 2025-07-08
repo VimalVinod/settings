@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    if (localStorage.getItem("diary_passcode") !== "ourstory2025") {
+      window.location.href = "login.html";
+    }
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Story</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+  <h1>📖 Our Story <span class="emoji-bounce">💌</span></h1>
+  <p style="text-align:center; font-size:1.2em; color:#b5651d;">
+    A place just for us... <span class="emoji-spin">🌙</span> <span class="emoji-heartbeat">❤️</span>
+  </p>
+ <div class="nav-links">
+    <a href="add.html">✍️ Add Entry</a>
+    <a href="gallery.html">🖼️ View Gallery</a>
+  </div>
+  <div id="entries" class="entry-container"></div>
+
+ 
+
+  <script src="supabase.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
