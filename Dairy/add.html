@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Entry</title>
+
+  <!-- Styles and Supabase -->
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+  <h1>✍️ Add a New Entry</h1>
+
+  <form id="entryForm">
+    <input type="text" id="title" placeholder="Title" required><br>
+    <textarea id="content" placeholder="Write your thoughts..." rows="6" required></textarea><br>
+    <input type="file" id="image"><br><br>
+
+    <label for="visibility">Visibility:</label>
+    <select id="visibility">
+      <option value="private">Private</option>
+      <option value="shared">Shared</option>
+    </select><br><br>
+
+    <button type="submit">Save Entry</button>
+  </form>
+
+  <div id="status"></div>
+
+  <div class="nav-links">
+    <a href="index.html">← Back to Diary</a>
+  </div>
+
+  <script src="supabase.js"></script>
+
+  <script>
+    const form = document.getElementById('entryForm');
+    const statusDiv = document.getElementById('status');
+    const currentUser = localStorage.getItem("diary_user");
+
+    if (!currentUser) {
+      alert("You must log in first.");
+      window.location.href = "index.html";
+    }
+
+    async function uploadImage(file) {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      const { data, error } = await supabase.storage
+        .from('gallery')
+        .upload(fileName, file);
+
+      if (error) {
+        throw new Error("Image upload failed.");
+      }
+
+      const { data: publicUrlData } = supabase
+        .storage
+        .from('gallery')
+        .getPublicUrl(fileName);
+
+      return publicUrlData.publicUrl;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+      const visibility = document.getElementById('visibility').value;
+      const imageFile = document.getElementById('image').files[0];
+
+      statusDiv.innerText = "⏳ Saving...";
+
+      try {
+        let imageUrl = null;
+        if (imageFile) {
+          imageUrl = await uploadImage(imageFile);
+        }
+
+        const { data, error } = await supabase
+          .from('entries')
+          .insert([{
+            title,
+            content,
+            image_url: imageUrl,
+            user: currentUser,
+            visibility
+          }]);
+
+        if (error) throw error;
+
+        statusDiv.innerText = "✅ Entry saved successfully!";
+        form.reset();
+      } catch (err) {
+        console.error(err);
+        statusDiv.innerText = "❌ Failed to save entry.";
+      }
+    });
+  </script>
+</body>
+</html>

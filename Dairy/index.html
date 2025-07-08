@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Our Story</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <style>
+    #main-section {
+      display: none;
+    }
+    .profiles {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin: 20px;
+    }
+    .profiles div {
+      cursor: pointer;
+      font-size: 2rem;
+      padding: 20px;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+    }
+    .profiles div:hover {
+      background-color: #f0f0f0;
+    }
+    #reset-link {
+      margin-top: 10px;
+      display: none;
+    }
+    #reset-link a {
+      color: #b5651d;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 👥 User Select -->
+  <div id="user-select">
+    <h2>Select Your Profile</h2>
+    <div class="profiles">
+      <div onclick="selectUser('me')">👦 Me</div>
+      <div onclick="selectUser('her')">👧 Her</div>
+    </div>
+  </div>
+
+  <!-- 🔐 Password Section -->
+  <div id="login-section" class="login-container" style="display:none;">
+    <h2>🔐 Enter Passcode for <span id="user-label"></span></h2>
+    <input type="password" id="passcode" placeholder="Secret passcode..." />
+    <button onclick="checkPass()">Unlock</button>
+    <p id="error" style="color:red;"></p>
+
+    <!-- Reset link only for Her -->
+    <p id="reset-link">Forgot passcode? <a onclick="resetPass()">Reset it</a></p>
+  </div>
+
+  <!-- 📖 Main Content Section -->
+  <div id="main-section">
+    <h1>📖 Our Story <span class="emoji-bounce">💌</span></h1>
+    <p style="text-align:center; font-size:1.2em; color:#b5651d;">
+      A place just for us... <span class="emoji-spin">🌙</span> <span class="emoji-heartbeat">❤️</span>
+    </p>
+    <div class="nav-links">
+      <a href="add.html">✍️ Add Entry</a>
+      <a href="gallery.html">🖼️ View Gallery</a>
+      <button onclick="logout()" style="margin-left:10px;">🔓 Logout</button>
+      <hr>
+    </div>
+    <div id="entries" class="entry-container"></div>
+  </div>
+
+  <script src="supabase.js"></script>
+  <script src="script.js"></script>
+  <script>
+    let currentUser = null;
+
+    function selectUser(user) {
+      currentUser = user;
+      document.getElementById('user-select').style.display = 'none';
+      document.getElementById('login-section').style.display = 'block';
+      document.getElementById('user-label').innerText = user === 'me' ? 'You' : 'Her';
+
+      // Show reset link only for Her
+      document.getElementById('reset-link').style.display = user === 'her' ? 'block' : 'none';
+    }
+
+    function checkPass() {
+      const code = document.getElementById('passcode').value;
+      const herCode = localStorage.getItem("code4her") || "code4her";
+
+      const valid =
+        (currentUser === 'me' && code === 'code4me') ||
+        (currentUser === 'her' && code === herCode);
+
+      if (valid) {
+        localStorage.setItem("diary_user", currentUser);
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('main-section').style.display = 'block';
+        loadEntries(currentUser);
+      } else {
+        document.getElementById('error').innerText = "Wrong code 💔";
+      }
+    }
+
+    function resetPass() {
+      const newCode = prompt("Enter new passcode for Her:");
+      if (newCode && newCode.trim().length >= 3) {
+        localStorage.setItem("code4her", newCode.trim());
+        alert("✅ New passcode saved!");
+      } else {
+        alert("❌ Passcode must be at least 3 characters.");
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const storedUser = localStorage.getItem("diary_user");
+      if (storedUser === "me" || storedUser === "her") {
+        currentUser = storedUser;
+        document.getElementById('user-select').style.display = 'none';
+        document.getElementById('main-section').style.display = 'block';
+        loadEntries(currentUser);
+      }
+    });
+
+    function logout() {
+      localStorage.removeItem("diary_user");
+      location.reload();
+    }
+  </script>
+</body>
+</html>
